@@ -1,0 +1,69 @@
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #222;
+    color: rgb(255, 255, 255);
+}
+
+.btn {
+    text-decoration: underline;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 10px;
+    color: black;
+    border-color: rgb(122, 177, 224);;
+    cursor: pointer;
+}
+
+.btn:hover {
+    color: white;
+    background-color: black;
+}
+
+#game {
+    background-color: #333;
+    margin-top:20px;
+    color: black;
+}
+
+#game.grid-mode{
+    display: grid;
+    grid-template-columns: repeat(20, 20px);
+    grid-template-rows: repeat(20, 20px);
+    gap: 2px;
+}
+
+.intro {
+    text-align: center;
+    color: black;
+    background: white;
+    padding: 5px;
+    margin: 0;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    background: #333;
+}
+
+.train-head {
+    background: rgba(9, 112, 9, 0.767);
+}
+
+.wall {
+    background-color: rgb(3, 30, 70);
+    border-radius: 12px 0 12px 0;
+}
+
+.train-wagon {
+    background-color: rgba(185, 14, 14, 0.616);
+}
+
+.collectible {
+    background-color: rgba(224, 174, 8, 0.637);
+    border-radius: 50%;
+}
