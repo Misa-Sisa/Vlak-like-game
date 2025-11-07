@@ -8,19 +8,36 @@ let maxWagons = 0;
 const game = document.getElementById("game");
 const intro = document.getElementById("intro");
 const gridSize = 20; // Spielfeld 20x20
-let headX = 2; //Anfangsposition des Zugkopfes (X)
-let headY = 2; ////Anfangsposition des Zugkopfes (Y)
+let headX = 2; // Anfangsposition des Zugkopfes (X)
+let headY = 2; // Anfangsposition des Zugkopfes (Y)
 let direction = "right";
 let moveInterval;
 let counter = 0;
+let roundCounter = 0;
 
-let currentLevel = 0;
+let currentLevel;
 
 let collectible = null; // Wagon zum einsammeln
+
+let highScore = localStorage.getItem("highScore");
+
+const description = document.getElementById("description");
+let showHighScore = document.createElement("p");
+showHighScore.id = "highScore";
+if (highScore === "" || highScore === null || isNaN(Number(highScore))) {
+    highScore = 0;
+} else {
+    highScore = Number(highScore);
+}
+showHighScore.textContent = `your highscore is: ${highScore}`;
+description.appendChild(showHighScore);
+
 // 2. Spielfeld zeichnen
 
-function startGame(levelIndex = 0) {
+function startGame(levelIndex = Math.floor(Math.random() * levels.length)) {
     currentLevel = levelIndex;
+    console.log(currentLevel);
+
     wall = [...createWall(), ...levels[currentLevel].walls]; // .walls, weil diese in levels.js unter diesen Namen deklariert sind. || THE SPREAD (...) OPERATOR wird hier benutzt
 
     headX = 2; 
@@ -29,7 +46,9 @@ function startGame(levelIndex = 0) {
     maxWagons = 0;
     collectible = null;
     direction = "right";
-    counter = 0;
+    counter = roundCounter * 10;
+    roundCounter++;
+    let moveSpeed = normalSpeed;
 
      // intro.remove(); - Intor aus dem DOM entfernen
     intro.style.display = "none";
@@ -79,12 +98,12 @@ function createGrid () {
 
         if (maxWagons >= 10) {
             clearInterval(moveInterval);
-            currentLevel++;
+            alert(`level ${currentLevel} hast du geschafft! Weiter mit ENTER`);
             if (currentLevel >= levels.length) {
                 alert("Du hast gewonnen");
                 return startMenu();
             }
-            loadLevel(currentLevel);
+            loadLevel(Math.floor(Math.random() * levels.length));
             return;
         }
     }
@@ -126,6 +145,12 @@ function createGrid () {
     }
 
     document.getElementById("counter").textContent = counter;
+
+    if (counter > highScore) {
+        highScore = counter;
+        localStorage.setItem("highScore", highScore);
+        showHighScore.textContent = `your highscore is: ${highScore}`;
+    }
 }
 
 // 2.1 Zufalls-Waggon erzeugen
@@ -170,7 +195,7 @@ function moveTrain() {
     for (let i = 0; i < wagons.length; i++) {
 
         if (headX === wagons[i].x && headY === wagons[i].y) {
-            alert ("Versuchen sie es nochmal");
+            alert (`Du hast ${counter} Wagons eingesammelt. Versuche es noch mal!`);
             return startMenu();
         };
     }
@@ -272,8 +297,13 @@ document.addEventListener("keyup", function(event) {
 
 document.getElementById("start").addEventListener("click", () => {
 
-    startGame(0);
+    startGame(Math.floor(Math.random() * levels.length));
 
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+    localStorage.removeItem("highScore");
+    window.location.reload();
 });
 
 document.addEventListener("keydown", (evt) => {
@@ -283,7 +313,7 @@ document.addEventListener("keydown", (evt) => {
 });
 
 
-document.getElementById("menu").addEventListener("click", startMenu());
+document.getElementById("menu").addEventListener("click", () => startMenu());
 
 document.getElementById("counter").textContent = counter;
 
