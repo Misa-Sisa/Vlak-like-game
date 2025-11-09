@@ -41,14 +41,23 @@ function startGame(levelIndex = Math.floor(Math.random() * levels.length)) {
 
     wall = [...createWall(), ...levels[currentLevel].walls]; // .walls, weil diese in levels.js unter diesen Namen deklariert sind. || THE SPREAD (...) OPERATOR wird hier benutzt
 
-    headX = 2; 
-    headY = 2;
     wagons = [];
     maxWagons = 0;
     collectible = null;
     direction = "right";
     counter = roundCounter * 10;
     roundCounter++;
+
+    if (roundCounter === 5 || roundCounter === 6) {
+        alert("Alles ist anders!");
+        headX = 18;    
+        headY = 2;
+    } else {
+        headX = 2; 
+        headY = 2;
+    }
+
+    
     let moveSpeed = normalSpeed;
 
      // intro.remove(); - Intor aus dem DOM entfernen
@@ -62,11 +71,13 @@ function startGame(levelIndex = Math.floor(Math.random() * levels.length)) {
     moveInterval = setInterval(moveTrain, moveSpeed); // Das Interval = Zug-Bewegund wird gestartet
 
     if (roundCounter === 3 || roundCounter === 6) {
+        alert("Du hast das BONUS Level erreicht!");
         startExtraLevelInterval = setInterval(startExtraLevel, 100);
     } else if (roundCounter !== 3 && roundCounter !== 6) {
         clearInterval(startExtraLevelInterval);
         document.body.classList.remove("toggleColor");
     }
+
 }
 
 function loadLevel(index) {
@@ -193,11 +204,27 @@ function moveTrain() {
             wagons.pop();
         }
     
-    switch (direction) {
-        case "up": headY--; break;
-        case "down": headY++; break;
-        case "left": headX--; break;
-        case "right": headX++; break;
+    // switch (direction) {
+    //     case "up": headY--; break;
+    //     case "down": headY++; break;
+    //     case "left": headX--; break;
+    //     case "right": headX++; break;
+    // }
+
+    if (roundCounter === 5 || roundCounter === 6) {
+        switch (direction) {
+            case "up": headY++; break;
+            case "down": headY--; break;
+            case "left": headX++; break;
+            case "right": headX--; break;
+        }
+    } else {
+        switch (direction) {
+            case "up": headY--; break;
+            case "down": headY++; break;
+            case "left": headX--; break;
+            case "right": headX++; break;
+    }
     }
 
     for (let i = 0; i < wagons.length; i++) {
@@ -262,14 +289,21 @@ function startMenu() {
 
 let normalSpeed = 200;
 let fastSpeed = 50;
+let slowSpeed = 400;
 let moveSpeed = normalSpeed;
 
 document.addEventListener("keydown", function(event) {
 
     if(event.code === "Space" && !event.repeat) { // event.repeat verhindert mehrfaches Auslösen beim Halten
-        moveSpeed = fastSpeed;
-        clearInterval(moveInterval);
-        moveInterval = setInterval (moveTrain, moveSpeed);
+        if (roundCounter !== 5 && roundCounter !== 6) {
+            moveSpeed = fastSpeed;
+            clearInterval(moveInterval);
+            moveInterval = setInterval (moveTrain, moveSpeed);
+        } else {
+            moveSpeed = slowSpeed;
+            clearInterval(moveInterval);
+            moveInterval = setInterval (moveTrain, moveSpeed);
+        }
     }
 
     function isCollisionWithWagons (x, y) { // Ist auf der Position (x, y) ein Wagon?
