@@ -3,7 +3,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #222;
+    background: var(--body);
     color: rgb(255, 255, 255);
 }
 
@@ -44,26 +44,43 @@ body {
     margin: 0;
 }
 
+:root {
+    --train-head: rgba(9, 112, 9, 0.767);
+    --train-wagon: rgba(185, 14, 14, 0.616);
+    --wall: rgb(3, 30, 70);
+    --collectible: rgba(224, 174, 8, 0.637);
+    --cell: #333;
+    --body: #222;
+}
+
 .cell {
     width: 20px;
     height: 20px;
-    background: #333;
+    background: var(--cell);
 }
 
 .train-head {
-    background: rgba(9, 112, 9, 0.767);
+    background: var(--train-head);
 }
 
 .wall {
-    background-color: rgb(3, 30, 70);
+    background-color: var(--wall);
     border-radius: 12px 0 12px 0;
 }
 
 .train-wagon {
-    background-color: rgba(185, 14, 14, 0.616);
+    background-color: var(--train-wagon);
 }
 
 .collectible {
-    background-color: rgba(224, 174, 8, 0.637);
+    background-color: var(--collectible);
     border-radius: 50%;
+}
+
+body.toggleColor {
+    --train-head: rgba(185, 14, 14, 0.616);
+    --train-wagon: rgba(9, 112, 9, 0.767);
+    --wall:  rgba(224, 174, 8, 0.637);
+    --collectible:rgb(3, 30, 70);
+    --cell: rgba(225, 226, 225, 0.767);
 }

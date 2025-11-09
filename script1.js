@@ -1,6 +1,5 @@
 import { levels } from "./levels.js";
 
-
 // 1. Spielfeldveriablen definieren
 let wagons = [];
 let wall;
@@ -32,6 +31,8 @@ if (highScore === "" || highScore === null || isNaN(Number(highScore))) {
 showHighScore.textContent = `your highscore is: ${highScore}`;
 description.appendChild(showHighScore);
 
+let startExtraLevelInterval;
+
 // 2. Spielfeld zeichnen
 
 function startGame(levelIndex = Math.floor(Math.random() * levels.length)) {
@@ -59,6 +60,13 @@ function startGame(levelIndex = Math.floor(Math.random() * levels.length)) {
     placeCollectible();
     createGrid();
     moveInterval = setInterval(moveTrain, moveSpeed); // Das Interval = Zug-Bewegund wird gestartet
+
+    if (roundCounter === 3 || roundCounter === 6) {
+        startExtraLevelInterval = setInterval(startExtraLevel, 100);
+    } else if (roundCounter !== 3 && roundCounter !== 6) {
+        clearInterval(startExtraLevelInterval);
+        document.body.classList.remove("toggleColor");
+    }
 }
 
 function loadLevel(index) {
@@ -98,7 +106,7 @@ function createGrid () {
 
         if (maxWagons >= 10) {
             clearInterval(moveInterval);
-            alert(`level ${currentLevel} hast du geschafft! Weiter mit ENTER`);
+            alert(`level ${roundCounter} hast du geschafft! Weiter mit ENTER`);
             if (currentLevel >= levels.length) {
                 alert("Du hast gewonnen");
                 return startMenu();
@@ -215,6 +223,8 @@ function moveTrain() {
 function startMenu() {
 
     clearInterval(moveInterval); // Stoppe die automatische Bewegung 
+    clearInterval(startExtraLevelInterval);
+    document.body.classList.remove("toggleColor");
     headX = 2; 
     headY = 2;
     wagons = [];
@@ -222,6 +232,7 @@ function startMenu() {
     collectible = null;
     direction = "right";
     counter = 0;
+    roundCounter = 0;
 
     game.classList.remove("grid-mode");
     
@@ -316,5 +327,9 @@ document.addEventListener("keydown", (evt) => {
 document.getElementById("menu").addEventListener("click", () => startMenu());
 
 document.getElementById("counter").textContent = counter;
+
+function startExtraLevel() {
+    document.body.classList.toggle("toggleColor");
+}
 
 // createGrid(); // die Funktion createGrid wird aufgerufen
