@@ -19,6 +19,7 @@ let currentLevel;
 let collectible = null; // Wagon zum einsammeln
 
 let highScore = localStorage.getItem("highScore");
+let newHighScore = false;
 
 const description = document.getElementById("description");
 let showHighScore = document.createElement("p");
@@ -169,6 +170,7 @@ function createGrid () {
         highScore = counter;
         localStorage.setItem("highScore", highScore);
         showHighScore.textContent = `your highscore is: ${highScore}`;
+        newHighScore = true;
     }
 }
 
@@ -231,6 +233,9 @@ function moveTrain() {
 
         if (headX === wagons[i].x && headY === wagons[i].y) {
             alert (`Du hast ${counter} Wagons eingesammelt. Versuche es noch mal!`);
+            if (newHighScore) {
+                alert(`You reached a new record! your highscore is: ${highScore}`)
+            }
             return startMenu();
         };
     }
@@ -239,6 +244,9 @@ function moveTrain() {
 
         if (headX === wall[i].x && headY === wall[i].y) {
             alert (`Du hast ${counter} Wagons eingesammelt. Versuche es noch mal!`);
+            if (newHighScore) {
+            alert(`You reached a new record! your highscore is: ${highScore}`)
+            }
             return startMenu();
         };
 
@@ -248,7 +256,7 @@ function moveTrain() {
 }
 
 function startMenu() {
-
+    newHighScore = false;
     clearInterval(moveInterval); // Stoppe die automatische Bewegung 
     clearInterval(startExtraLevelInterval);
     document.body.classList.remove("toggleColor");
